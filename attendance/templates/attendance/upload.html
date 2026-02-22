@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload UTAK Attendance</title>
+</head>
+<body>
+    <h1>Upload UTAK CSV File</h1>
+    
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="utak_csv" required>
+        <button type="submit">Upload</button>
+    </form>
+    
+</body>
+</html>
