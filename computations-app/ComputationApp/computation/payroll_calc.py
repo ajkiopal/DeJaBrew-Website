@@ -8,3 +8,17 @@ def compute_payroll(hours_worked, hourly_rate, deductions):
         "gross_pay": gross_pay,
         "net_pay": net_pay
     }
+
+def apply_adjustment(payroll_record, bonus=0, deduction=0):
+    bonus = Decimal(bonus)
+    deduction = Decimal(deduction)
+
+    new_gross = payroll_record.gross_pay + bonus
+    new_deductions = payroll_record.deductions + deduction
+    new_net = new_gross - new_deductions
+
+    return {
+        "adjusted_gross": new_gross,
+        "adjusted_deductions": new_deductions,
+        "adjusted_net": new_net
+    }
