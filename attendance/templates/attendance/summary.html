@@ -1,0 +1,48 @@
+{% extends 'attendance/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="content-card shadow-sm p-5" style="background-color: white; border-radius: 25px;">
+            <h2 class="text-center mb-4" style="font-weight: bold;">Import Results</h2>
+            
+            <div class="row text-center mb-4">
+                <div class="col-md-4">
+                    <div class="p-3 rounded-4" style="background-color: #f8f9fa; border: 1px solid #d6ccc2;">
+                        <h3 class="text-success">{{ success }}</h3>
+                        <small class="text-uppercase fw-bold">Imported</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 rounded-4" style="background-color: #f8f9fa; border: 1px solid #d6ccc2;">
+                        <h3 class="text-warning">{{ duplicates }}</h3>
+                        <small class="text-uppercase fw-bold">Duplicates</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 rounded-4" style="background-color: #f8f9fa; border: 1px solid #d6ccc2;">
+                        <h3 class="text-danger">{{ errors }}</h3>
+                        <small class="text-uppercase fw-bold">Errors</small>
+                    </div>
+                </div>
+            </div>
+
+            {% if log %}
+            <div class="alert alert-light border-danger text-start">
+                <h6 class="text-danger">Error Report:</h6>
+                <ul class="mb-0">
+                    {% for msg in log %}
+                        <li>{{ msg }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <a href="{% url 'upload_csv' %}" class="btn rounded-pill px-4" style="border: 1px solid #d6ccc2;">New Upload</a>
+                <a href="{% url 'import_history' %}" class="btn rounded-pill px-4 text-white" style="background-color: #c9ada7;">View History</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'attendance/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="content-card shadow-sm">
+        <table class="table mb-0">
+            <thead>
+                <tr class="table-custom-header text-center">
+                    <th class="py-3">Date Uploaded</th>
+                    <th class="py-3">Filename</th>
+                    <th class="py-3">Successes</th>
+                    <th class="py-3">Errors</th>
+                    <th class="py-3">Status</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                {% for entry in history %}
+                <tr style="vertical-align: middle; background-color: white;">
+                    <td class="py-4">{{ entry.date_uploaded|date:"m/d/Y" }}</td>
+                    <td class="py-4"><code>{{ entry.filename }}</code></td>
+                    <td class="py-4">{{ entry.success_count }}</td>
+                    <td class="py-4">{{ entry.error_count }}</td>
+                    <td class="py-4">
+                        <button class="btn btn-outline-danger btn-sm rounded-pill" style="font-size: 0.8rem;">
+                            {{ entry.status }}
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

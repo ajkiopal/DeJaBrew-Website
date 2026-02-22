@@ -1,16 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Upload UTAK Attendance</title>
-</head>
-<body>
-    <h1>Upload UTAK CSV File</h1>
-    
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="utak_csv" required>
-        <button type="submit">Upload</button>
-    </form>
-    
-</body>
-</html>
+{% extends 'attendance/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="content-card shadow-sm p-5 text-center" style="background-color: white; border-radius: 25px;">
+            <h2 class="mb-4" style="font-weight: bold;">Import UTAK CSV</h2>
+            <p class="text-muted mb-4">Please select the daily attendance CSV file exported from the UTAK system.</p>
+            
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <input type="file" name="utak_csv" class="form-control form-control-lg rounded-pill" required style="border: 2px solid #d6ccc2;">
+                </div>
+                <button type="submit" class="btn btn-lg px-5 rounded-pill" style="background-color: #d6ccc2; font-weight: bold; border: none;">
+                    Upload and Process
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
