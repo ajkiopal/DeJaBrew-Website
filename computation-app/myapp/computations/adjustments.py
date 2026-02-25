@@ -7,53 +7,47 @@ Handles payroll adjustments:
 - Generates audit logs for each adjustment
 """
 
+from datetime import datetime
 from .payroll_models import PayrollComputation, PayrollAdjustment, PayrollAuditLog
 
 
-def apply_adjustment(payroll: PayrollComputation, adjustment: PayrollAdjustment) -> PayrollAuditLog:
+def apply_adjustment(payroll, adjustment: PayrollAdjustment) -> PayrollAuditLog:
     """
-    Applies a single adjustment to a PayrollComputation object.
+    Apply an adjustment to a PayrollComputation instance without
+    resetting previous adjustments. Returns a PayrollAuditLog entry.
 
-    payroll: PayrollComputation object (current payroll)
-    adjustment: PayrollAdjustment object (admin input)
-    return: PayrollAuditLog object recording the change
+    Args:
+        payroll (PayrollComputation): The payroll record to update.
+        adjustment (PayrollAdjustment): The adjustment to apply.
+
+    Returns:
+        PayrollAuditLog: Record of the adjustment applied.
     """
-
-    #Validate adjustment
-    if adjustment.amount == 0:
-        raise ValueError("Adjustment amount cannot be zero.")
-    if not adjustment.justification:
-        raise ValueError("Justification is required for adjustment.")
-
-    # Record old payroll values
+    # Step 1: Capture old values for audit purposes
     old_values = {
-        "gross_pay": payroll.gross_pay,
         "net_pay": payroll.net_pay,
         "total_adjustments": payroll.total_adjustments
     }
 
-    #Apply adjustment
+    # Step 2: Update payroll totals
     payroll.total_adjustments += adjustment.amount
     payroll.net_pay = payroll.gross_pay + payroll.total_adjustments
 
-    #Record new payroll values
-    new_values = {
-        "gross_pay": payroll.gross_pay,
-        "net_pay": payroll.net_pay,
-        "total_adjustments": payroll.total_adjustments
-    }
-
-    # Generate audit log
+    # Step 3: Create audit log
     audit_log = PayrollAuditLog(
-        log_id=None,  # To be generated when saving to DB
+        log_id=1,  # Replace with real ID generator in production
         employee_id=payroll.employee_id,
         payroll_period_start=payroll.payroll_period_start,
         payroll_period_end=payroll.payroll_period_end,
         admin_id=adjustment.admin_id,
-        timestamp=adjustment.timestamp,
+        timestamp=adjustment.timestamp or datetime.now(),
         old_values=old_values,
-        new_values=new_values,
+        new_values={
+            "net_pay": payroll.net_pay,
+            "total_adjustments": payroll.total_adjustments
+        },
         justification=adjustment.justification
     )
 
+    # Step 4: Return audit log for UI / confirmation
     return audit_log
