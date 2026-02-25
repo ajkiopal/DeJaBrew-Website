@@ -7,7 +7,7 @@ calculates payroll (regular pay, overtime, deductions, gross/net pay),
 and returns a PayrollComputation object.
 """
 
-from payroll_models import PayrollComputation
+from .payroll_models import PayrollComputation
 
 # constants (for testing / defaults) feel free to change
 LATE_DEDUCTION_RATE = 1       # Deduction per late hour (could be employee base rate)

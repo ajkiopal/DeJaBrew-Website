@@ -7,7 +7,7 @@ Handles payroll adjustments:
 - Generates audit logs for each adjustment
 """
 
-from payroll_models import PayrollComputation, PayrollAdjustment, PayrollAuditLog
+from .payroll_models import PayrollComputation, PayrollAdjustment, PayrollAuditLog
 
 
 def apply_adjustment(payroll: PayrollComputation, adjustment: PayrollAdjustment) -> PayrollAuditLog:

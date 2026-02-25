@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from datetime import datetime
 from .payroll_models import PlaceholderEmployee, PlaceholderAttendanceSummary, PayrollAdjustment
-from calculator import generate_payroll
-from adjustments import apply_adjustment
+from .calculator import generate_payroll
+from .adjustments import apply_adjustment
 
 def test_payslip_view(request):
     # Create placeholder employee & attendance
