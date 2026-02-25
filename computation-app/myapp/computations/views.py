@@ -1,13 +1,33 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from datetime import datetime
 from .payroll_models import PlaceholderEmployee, PlaceholderAttendanceSummary, PayrollAdjustment
 from .calculator import generate_payroll
 from .adjustments import apply_adjustment
 
-def test_payslip_view(request):
-    # Create placeholder employee & attendance
+
+# 1. Replace PlaceholderEmployee & PlaceholderAttendanceSummary
+#    with actual data from the employee import (Gelo) and attendance import (Fraulene).
+#    Example:
+#       emp = get_employee(employee_id)
+#       att = get_attendance(employee_id, period_start, period_end)
+#
+# 2. Ensure that generate_payroll() can accept the real models instead of placeholders.
+# 3. apply_adjustment() expects a PayrollComputation object and a PayrollAdjustment object.
+# 4. The template adjustments.html expects:
+#       'employee' -> Employee object
+#       'payroll' -> PayrollComputation object
+#       'adjustments' -> list of applied adjustments (Audit Logs)
+
+
+def adjustments_view(request, employee_id=1):
+    """
+    Displays payroll computation for a given employee and payroll period
+    and allows an admin to apply adjustments.
+    """
+
+ # placeholders for testing
     emp = PlaceholderEmployee(
-        employee_id=1,
+        employee_id=employee_id,
         full_name="Juan Dela Cruz",
         employment_type="Barista",
         base_hourly_rate=120.0,
@@ -15,7 +35,7 @@ def test_payslip_view(request):
         allowances=50.0
     )
     att = PlaceholderAttendanceSummary(
-        employee_id=1,
+        employee_id=employee_id,
         payroll_period_start="2026-02-01",
         payroll_period_end="2026-02-15",
         total_regular_hours=80,
@@ -23,35 +43,44 @@ def test_payslip_view(request):
         total_late_hours=2,
         total_undertime_hours=1
     )
+   # end of placeholders
 
-    # Generate payroll
+    # Generate payroll computation
     payroll = generate_payroll(emp, att)
 
-    #Apply a sample adjustment
-    adj = PayrollAdjustment(
-        adjustment_id=1,
-        employee_id=1,
-        payroll_period_start=att.payroll_period_start,
-        payroll_period_end=att.payroll_period_end,
-        amount=500,
-        adjustment_type="Bonus",
-        justification="Outstanding performance",
-        admin_id="admin001",
-        timestamp=datetime.now()
-    )
-    audit_log = apply_adjustment(payroll, adj)
+    # Keep a list of adjustments applied (in a real app, fetch from DB)
+    adjustments_list = []
 
-    #Pass data to template
-    return render(request, 'myapp/payslip.html', {
-        'employee_name': emp.full_name,
-        'payroll_period_start': payroll.payroll_period_start,
-        'payroll_period_end': payroll.payroll_period_end,
-        'regular_pay': payroll.regular_pay,
-        'overtime_pay': payroll.overtime_pay,
-        'late_deduction': payroll.late_deduction,
-        'undertime_deduction': payroll.undertime_deduction,
-        'gross_pay': payroll.gross_pay,
-        'total_adjustments': payroll.total_adjustments,
-        'net_pay': payroll.net_pay,
-        'adjustments': [audit_log]
+    # Handle form submission
+    if request.method == "POST":
+        amount = float(request.POST.get("amount"))
+        adjustment_type = request.POST.get("adjustment_type")
+        justification = request.POST.get("justification")
+        timestamp = datetime.now()
+
+        # Create adjustment object
+        adj = PayrollAdjustment(
+            adjustment_id=1,  # In real integration, generate unique ID
+            employee_id=employee_id,
+            payroll_period_start=att.payroll_period_start,
+            payroll_period_end=att.payroll_period_end,
+            amount=amount,
+            adjustment_type=adjustment_type,
+            justification=justification,
+            admin_id="admin001",  # Replace with logged-in admin ID
+            timestamp=timestamp
+        )
+
+        # Apply adjustment and get audit log
+        audit_log = apply_adjustment(payroll, adj)
+        adjustments_list.append(audit_log)
+
+        # After applying, reload the page (POST-Redirect-GET pattern recommended)
+        return redirect('adjustments', employee_id=employee_id)
+
+    # Render adjustments page
+    return render(request, 'computations/adjustments.html', {
+        'employee': emp,
+        'payroll': payroll,
+        'adjustments': adjustments_list
     })
