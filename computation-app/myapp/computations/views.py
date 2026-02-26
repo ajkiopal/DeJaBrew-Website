@@ -4,10 +4,8 @@ from .payroll_models import PlaceholderEmployee, PlaceholderAttendanceSummary, P
 from .calculator import generate_payroll
 from .adjustments import apply_adjustment
 
-# --- TEMPORARY MEMORY FOR TESTING ---
-# This list will act as our fake database and remember adjustments between clicks!
+# TEMPORARY ONLY. This list will act as our fake database and remember adjustments between clicks!
 fake_adjustments_db = []
-# ------------------------------------
 
 def adjustments_view(request, employee_id=None):
     # 1. Define all employees (placeholder or real)
