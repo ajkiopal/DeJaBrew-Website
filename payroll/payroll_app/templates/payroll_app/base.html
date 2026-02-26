@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeJa Brew Payroll</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --dejabrew-bg: #e5e5e5;
+            --dejabrew-tan: #d6ccc2;
+            --dejabrew-header: #c9ada7;
+        }
+        body { 
+            background-color: var(--dejabrew-bg); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .custom-nav {
+            background-color: var(--dejabrew-tan);
+            border-radius: 50px;
+            margin: 20px auto;
+            padding: 10px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 90%;
+        }
+        .nav-links a {
+            color: black;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+            font-size: 1.2rem;
+        }
+        .table-custom-header {
+            background-color: var(--dejabrew-tan) !important;
+            color: black !important;
+        }
+        .content-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 0;
+            overflow: hidden;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="custom-nav">
+            <div class="d-flex align-items-center">
+                <span style="font-size: 1.5rem; margin-right: 10px;">⚙️</span>
+                <h2 class="mb-0" style="font-weight: bold;">
+                    {% block page_title %}{% endblock %}
+                </h2>
+            </div>
+            <div class="nav-links">
+                {% block nav_links %}{% endblock %}
+            </div>
+            <div>
+                <span style="font-size: 1.5rem;">👤 ➔|</span>
+            </div>
+        </div>
+            {% if messages %}
+                <div style="max-width: 90%; margin: 0 auto;">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} mb-2">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

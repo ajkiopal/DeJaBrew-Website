@@ -1,5 +1,3 @@
-import os
-
 """
 Django settings for payroll project.
 
@@ -12,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*u%i*0vk#^225l&h$=a8d(7oji+ns6%t42(wy(d&2o9j$^&f(d'
+SECRET_KEY = 'django-insecure-_tx-rx$j%s_dtcwlkmh!obm1ii-inrp68_)8$x%2a8wmn)t6%!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
