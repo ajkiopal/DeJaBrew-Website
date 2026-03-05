@@ -1,0 +1,45 @@
+{% extends "base_admin.html" %}
+{% block nav_payroll_active %}active{% endblock %}
+
+{% block page_title %}Payroll{% endblock %}
+
+{% block nav_links %}
+  <a href="{% url 'payroll_run_create' %}">Run Payroll</a>
+  <a href="{% url 'pay_periods' %}">Periods</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="content-card p-4 mt-4">
+
+  <h4 class="mb-3 text-center">Run Payroll</h4>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label class="form-label">Select Pay Period</label>
+      <select name="period_id" class="form-select" required>
+        <option value="">Select...</option>
+        {% for p in periods %}
+          <option value="{{ p.id }}">
+            {% if p.label %}
+              {{ p.label }}
+            {% else %}
+              {{ p.start_date }} to {{ p.end_date }}
+            {% endif %}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="text-center">
+      <button type="submit" class="btn btn-dark px-4">
+        Run Payroll
+      </button>
+    </div>
+  </form>
+
+</div>
+
+{% endblock %}

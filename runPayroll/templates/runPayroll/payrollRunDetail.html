@@ -1,0 +1,65 @@
+{% extends "base_admin.html" %}
+{% block nav_payroll_active %}active{% endblock %}
+
+{% block page_title %}Payroll{% endblock %}
+
+{% block nav_links %}
+  <a href="{% url 'payroll_run_create' %}">Run Payroll</a>
+  <a href="{% url 'pay_periods' %}">Periods</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="content-card p-4 mt-4">
+  <h4 class="mb-3">Payroll Run Details</h4>
+
+  <p class="mb-2"><strong>Period:</strong> {{ run.period }}</p>
+  <p class="mb-2"><strong>Status:</strong> {{ run.status }}</p>
+  <p class="mb-2"><strong>Created:</strong> {{ run.created_at }}</p>
+
+  {% if run.completed_at %}
+    <p class="mb-2"><strong>Completed:</strong> {{ run.completed_at }}</p>
+  {% endif %}
+
+  <hr class="my-4">
+
+  <h5 class="mb-3">Computed Payroll Records</h5>
+
+  <table class="table table-striped">
+    <thead class="table-custom-header">
+      <tr>
+        <th>Employee ID</th>
+        <th>Name</th>
+        <th class="text-end">Gross Pay</th>
+        <th class="text-end">Net Pay</th>
+        <th>Finalized?</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+        <tr>
+          <td>{{ r.employee.employee_id|stringformat:"04d" }}</td>
+          <td>{{ r.employee.name }}</td>
+          <td class="text-end">₱{{ r.gross_pay }}</td>
+          <td class="text-end fw-bold">₱{{ r.net_pay }}</td>
+          <td>{% if r.is_finalized %}Yes{% else %}No{% endif %}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5" class="text-muted">
+            No computed payroll records yet for this period.
+            (Likely missing AttendanceSummary and/or PayrollEmployeeProfile.)
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="mt-3">
+    <a href="{% url 'payroll_run_create' %}" class="btn btn-dark btn-sm">
+      Back
+    </a>
+  </div>
+</div>
+
+{% endblock %}
