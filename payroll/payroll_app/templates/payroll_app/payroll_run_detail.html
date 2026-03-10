@@ -1,29 +1,39 @@
-{% extends "payroll_app/base.html" %}
+{% extends "base_admin.html" %}
 
-{% block page_title %}Payroll{% endblock %}
-
-{% block nav_links %}
-  <a href="{% url 'payroll_run_create' %}">Run Payroll</a>
-{% endblock %}
+{% block title %}Payroll Run Details{% endblock %}
 
 {% block content %}
 
 <div class="content-card p-4 mt-4">
-  <h4 class="mb-3">Payroll Run Details</h4>
 
-  <p class="mb-2"><strong>Period:</strong> {{ run.period }}</p>
-  <p class="mb-2"><strong>Status:</strong> {{ run.status }}</p>
-  <p class="mb-2"><strong>Created:</strong> {{ run.created_at }}</p>
+  <h2 style="margin-top:0;">Payroll Run Details</h2>
+
+  <p class="mb-2">
+    <strong>Period:</strong>
+    {{ run.period }}
+  </p>
+
+  <p class="mb-2">
+    <strong>Status:</strong>
+    {{ run.status }}
+  </p>
+
+  <p class="mb-2">
+    <strong>Created:</strong>
+    {{ run.created_at }}
+  </p>
 
   {% if run.completed_at %}
-    <p class="mb-2"><strong>Completed:</strong> {{ run.completed_at }}</p>
+    <p class="mb-2">
+      <strong>Completed:</strong>
+      {{ run.completed_at }}
+    </p>
   {% endif %}
 
   <div class="mt-3">
-    <a href="{% url 'payroll_run_create' %}" class="btn btn-dark btn-sm">
-      Back
-    </a>
+    <a href="{% url 'payroll_run_create' %}" class="btn btn-dark btn-sm">Back</a>
   </div>
+
 </div>
 
 {% endblock %}
