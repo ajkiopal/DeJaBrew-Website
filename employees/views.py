@@ -17,13 +17,12 @@ def admin_required(view_func):
 @admin_required
 @require_http_methods(["GET", "POST"])
 def employees_home(request):
-    mode = request.GET.get("mode", "none") 
+    mode = request.GET.get("mode", "none")
     edit_id = request.GET.get("id")
 
     add_form = EmployeeCreateForm()
     edit_form = None
     editing_emp = None
-
     show_add_validation = False
     show_edit_validation = False
 
@@ -39,9 +38,25 @@ def employees_home(request):
             add_form = EmployeeCreateForm(request.POST)
 
             if add_form.is_valid():
-                add_form.save()
-                messages.success(request, "Employee successfully added.")
-                return redirect("employees_home")
+                cleaned = add_form.cleaned_data
+
+                duplicate_exists = Employee.objects.filter(
+                    name=cleaned["name"],
+                    address=cleaned["address"],
+                    job_title=cleaned["job_title"],
+                    salary_rate=cleaned["salary_rate"],
+                    contact_number=cleaned["contact_number"],
+                    date_hired=cleaned["date_hired"],
+                    role=cleaned["role"],
+                ).exists()
+
+                if duplicate_exists:
+                    add_form.add_error(None, "This employee record already exists.")
+                    show_add_validation = True
+                else:
+                    add_form.save()
+                    messages.success(request, "Employee successfully added.")
+                    return redirect("employees_home")
             else:
                 show_add_validation = True
 
@@ -64,13 +79,14 @@ def employees_home(request):
 
         elif action == "delete":
             emp_id = request.POST.get("employee_id")
+
             if emp_id:
                 Employee.objects.filter(employee_id=emp_id).delete()
                 messages.success(request, "Employee deleted successfully.")
-            return redirect("employees_home")
+                return redirect("employees_home")
 
     employees = list(Employee.objects.all().order_by("employee_id"))
-    empty_message = "No Employees Registered" if len(employees) == 0 else ""
+    empty_message = "No employees added yet." if len(employees) == 0 else ""
 
     return render(request, "employees/employees_home.html", {
         "employees": employees,
